@@ -1,18 +1,19 @@
-const getEventElement = (icon = ``, title = ``, timetable = ``, duration = ``, offers = []) => {
-  const list = offers.map((item) => `<li>
-        <button class="trip-point__offer">${item}</button>
-      </li>`);
-  console.log(list);
+const getEventElement = (event = {icon: `🚕`, title: ``, timetable: ``, duration: ``, price: ``, offers: []}) => {
   return `<article class="trip-point">
-    <i class="trip-icon">🚕</i>
-    <h3 class="trip-point__title">Taxi to Airport</h3>
+    <i class="trip-icon">${event.icon}</i>
+    <h3 class="trip-point__title">${event.title}</h3>
     <p class="trip-point__schedule">
-      <span class="trip-point__timetable">10:00&nbsp;— 11:00</span>
-      <span class="trip-point__duration">1h 30m</span>
+      <span class="trip-point__timetable">${event.timetable}</span>
+      <span class="trip-point__duration">${event.duration}</span>
     </p>
-    <p class="trip-point__price">€&nbsp;20</p>
+    <p class="trip-point__price">${event.price}</p>
     <ul class="trip-point__offers">
-      ${list}
+      ${ event.offers.map((item) => {
+    return `<li> 
+<button class="trip-point__offer">${item}</button>
+</li>`;
+  }).join(``)
+}
     </ul>
   </article>`;
 };
