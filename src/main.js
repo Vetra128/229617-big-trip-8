@@ -1,6 +1,6 @@
 import {getRandomInteger} from './utils';
 import getFilterElement from './filter-element';
-import getEventElement from './event-element';
+import {getEventElement} from './event-element';
 import {filterList, eventList} from './data';
 
 const NUMBER_OF_EVENTS = 7;
