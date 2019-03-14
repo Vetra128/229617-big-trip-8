@@ -1,39 +1,30 @@
-import {getRandomInteger} from './utils';
-import getFilterElement from './filter-element';
-import {getEventElement} from './event-element';
-import {filterList, eventList} from './data';
+import {getPoint} from './point';
+import {getFilter} from './filter';
 
-const NUMBER_OF_EVENTS = 7;
+import {getPointData} from './mock/data';
 
-const filterWrapper = document.querySelector(`.trip-filter`);
-const eventWrapper = document.querySelector(`.trip-day__items`);
+const filterNames = [
+  `everything`,
+  `future`,
+  `past`,
+];
 
-let fragment = ``;
+const generateFilters = () => filterNames.map(getFilter).join(``);
+const generatePoints = (num = 3) => [...Array(num)]
+  .map(getPointData)
+  .map(getPoint)
+  .join(``);
 
-const renderFilters = (filters) => {
-  filters.map((item) => {
-    fragment += getFilterElement(item.name, item.isChecked);
-  });
-  filterWrapper.innerHTML = ``;
+const filterForm = document.querySelector(`.trip-filter`);
+const dayItems = document.querySelector(`.trip-day__items`);
 
-  filterWrapper.insertAdjacentHTML(`beforeend`, fragment);
+const renderElements = (container, element) => {
+  container.innerHTML = element;
 };
 
-const renderTasks = (num = getRandomInteger()) => {
-  fragment = ``;
-  eventWrapper.innerHTML = ``;
-  while (num > 0) {
-    num -= 1;
-    fragment += getEventElement(eventList);
-  }
-
-  eventWrapper.insertAdjacentHTML(`beforeend`, fragment);
-};
-
-renderFilters(filterList);
-
-renderTasks(NUMBER_OF_EVENTS);
-
-filterWrapper.addEventListener(`change`, () => {
-  renderTasks();
+filterForm.addEventListener(`change`, () => {
+  renderElements(dayItems, generatePoints());
 });
+
+renderElements(dayItems, generatePoints());
+renderElements(filterForm, generateFilters());
