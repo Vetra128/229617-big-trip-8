@@ -48,4 +48,4 @@ export const getRandomOffers = ({num = 3, price: {min = 10, max = 30}} = {}) =>
 
 export const getRandomPicture = (num = 4) =>
   [...new Array(num)]
-    .map((item) => (`//picsum.photos/300/150?r=${Math.random()}`));
+    .map(() => (`//picsum.photos/300/150?r=${Math.random()}`));
