@@ -1,7 +1,7 @@
 import Point from './point';
 import FullPoint from './full-point';
 import {getFilter} from './filter';
-import {getRandomInteger} from './mock/randomizes'
+import {getRandomInteger} from './mock/randomizes';
 
 import {getPointData} from './mock/data';
 
