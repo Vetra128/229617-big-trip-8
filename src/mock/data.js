@@ -10,7 +10,7 @@ import {
 export const getPointData = () => ({
   title: getRandomTitle(),
   type: getRandomType(),
-  picture: getRandomPicture(),
+  pictures: getRandomPicture(),
   description: getRandomDescription(3),
   price: getRandomInteger(10, 100),
   time: getRandomDates({

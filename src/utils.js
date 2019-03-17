@@ -1,4 +1,4 @@
-import {Time} from "./const";
+import {Time} from './const';
 
 export const makeTime = (ms) => ({
   D: Math.floor(ms / Time.DAY),
@@ -7,3 +7,9 @@ export const makeTime = (ms) => ({
 });
 
 export const formatTime = (date) => date.toTimeString().slice(0, 5);
+
+export const createElement = (template) => {
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = template;
+  return newElement.firstChild;
+};

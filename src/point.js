@@ -1,20 +1,10 @@
 import {
   makeTime,
-  formatTime
+  formatTime,
+  createElement
 } from './utils';
 
 import {Icons} from './const';
-
-import {createElement} from './create-element';
-
-// export const getPoint = ({type, title, time, price, offers}) => `
-//   <article class="trip-point">
-//     ${getIcon(type)}
-//     <h3 class="trip-point__title">${title}</h3>
-//     ${getSchedule(time)}
-//     <p class="trip-point__price">&euro;&nbsp;${price}</p>
-//     ${offers.length > 0 ? getOffers(offers) : ``}
-//   </article>`;
 
 export default class Point {
   constructor(data) {
@@ -27,10 +17,24 @@ export default class Point {
     this._state = {
       isEdit: false
     };
-
     this._element = null;
+    this._onClick = null;
+
+    this._onPointClick = this._onPointClick.bind(this);
   }
 
+  get element() {
+    return this._element;
+  }
+
+  _onPointClick(evt) {
+    evt.preventDefault();
+    return (typeof this._onClick === `function`) && this._onClick();
+  }
+
+  set onClick(fn) {
+    this._onClick = fn;
+  }
   _getIcon() {
     return `<i class="trip-icon">${Icons.get(this._type)}</i>`;
   }
@@ -73,12 +77,25 @@ export default class Point {
     ${this._getSchedule(this._time)}
     <p class="trip-point__price">&euro;&nbsp;${this._price}</p>
     ${this._offers.length > 0 ? this._getOffers() : ``}
-  </article>`;
+  </article>`.trim();
   }
-
   render() {
-    this._element = this.template;
+    this._element = createElement(this.template);
+    this.bind();
     return this._element;
   }
+  bind() {
+    this._element
+      .addEventListener(`click`, this._onPointClick);
+  }
 
+  unbind() {
+    this._element.removeEventListener(`click`, this._onPointClick);
+  }
+
+  unrender() {
+    this.unbind();
+    this._element.remove();
+    this._element = null;
+  }
 }
