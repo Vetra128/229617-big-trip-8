@@ -46,6 +46,6 @@ export const getRandomOffers = ({num = 3, price: {min = 10, max = 30}} = {}) =>
   [...new Set(getRandomValues(offers, num))]
     .map((name) => ({name, price: getRandomInteger(min, max)}));
 
-export const getRandomPicture = (num = 4) =>
-  [...new Array(num)]
+export const getRandomPictures = (num = 4) =>
+  [...Array(num)]
     .map(() => (`//picsum.photos/300/150?r=${Math.random()}`));
