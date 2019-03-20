@@ -3,9 +3,8 @@ import {
   createElement,
   isEscapeKey
 } from './utils';
-
 import {Icons} from './const';
-import {isFunction} from 'lodash';
+import _ from 'lodash';
 
 export default class FullPoint {
   constructor(data) {
@@ -56,7 +55,7 @@ export default class FullPoint {
 
   _onKeyEsc(evt) {
     return _.isFunction(this._onEsc)
-      && isEscapeKey(evt.key)
+      && isEscapeKey(evt)
       && this._onEsc();
   }
 

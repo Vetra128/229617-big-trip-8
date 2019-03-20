@@ -1,10 +1,12 @@
 import {
-  makeTime,
-  formatTime,
   createElement
 } from './utils';
-
-import {Icons} from './const';
+import {
+  getOffers,
+  getSchedule,
+  getIcon
+} from './point/index';
+import _ from 'lodash';
 
 export default class Point {
   constructor(data) {
@@ -29,61 +31,30 @@ export default class Point {
 
   _onPointClick(evt) {
     evt.preventDefault();
-    return (typeof this._onClick === `function`) && this._onClick();
+    return _.isFunction(this._onClick) && this._onClick();
   }
 
   set onClick(fn) {
     this._onClick = fn;
   }
-  _getIcon() {
-    return `<i class="trip-icon">${Icons.get(this._type)}</i>`;
-  }
-
-  _getSchedule() {
-    const getDuration = (dateStart, dateEnd) => dateEnd - dateStart;
-
-    const hasTimeValue = ([, value]) => value !== 0;
-    const formatTimeValue = ([format, value]) => `${value}${format}`;
-
-    const formatDuration = (ms) =>
-      Object.entries(makeTime(ms))
-        .filter(hasTimeValue)
-        .map(formatTimeValue)
-        .join(` `);
-    return `
-      <p class="trip-point__schedule">
-        <span class="trip-point__timetable">${formatTime(this._time.start)}&nbsp;&mdash; ${formatTime(this._time.end)}</span>
-        <span class="trip-point__duration">${formatDuration(getDuration(this._time.start, this._time.end))}</span>
-      </p>`;
-  }
-
-  _getOffers() {
-    return `
-  <ul class="trip-point__offers">
-  ${this._offers.map(({name, price}) => `
-    <li>
-      <button class="trip-point__offer">${name} +&euro;&nbsp;${price}
-      </button>
-    </li>`
-  ).join(``)}
-  </ul>`;
-  }
 
   get template() {
     return `
   <article class="trip-point">
-    ${this._getIcon(this._type)}
+    ${getIcon(this._type)}
     <h3 class="trip-point__title">${this._title}</h3>
-    ${this._getSchedule(this._time)}
+    ${getSchedule(this._time)}
     <p class="trip-point__price">&euro;&nbsp;${this._price}</p>
-    ${this._offers.length > 0 ? this._getOffers() : ``}
+    ${this._offers.length > 0 ? getOffers(this._offers) : ``}
   </article>`.trim();
   }
+
   render() {
     this._element = createElement(this.template);
     this.bind();
     return this._element;
   }
+
   bind() {
     this._element
       .addEventListener(`click`, this._onPointClick);
