@@ -13,3 +13,6 @@ export const createElement = (template) => {
   newElement.innerHTML = template;
   return newElement.firstChild;
 };
+
+export const isEscapeKey = ({key}) =>
+  key === `Escape` || key === `Esc`;

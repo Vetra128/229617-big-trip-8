@@ -1,9 +1,11 @@
 import {
   formatTime,
-  createElement
+  createElement,
+  isEscapeKey
 } from './utils';
 
 import {Icons} from './const';
+import {isFunction} from 'lodash';
 
 export default class FullPoint {
   constructor(data) {
@@ -35,7 +37,7 @@ export default class FullPoint {
 
   _onSaveButtonClick(evt) {
     evt.preventDefault();
-    return typeof this._onSave === `function`
+    return _.isFunction(this._onSave)
       && this._onSave();
   }
 
@@ -44,7 +46,7 @@ export default class FullPoint {
   }
 
   _onDeleteButtonClick() {
-    return typeof this._onDelete === `function`
+    return _.isFunction(this._onDelete)
       && this._onDelete();
   }
 
@@ -53,8 +55,8 @@ export default class FullPoint {
   }
 
   _onKeyEsc(evt) {
-    return typeof this._onEsc === `function`
-      && evt.keyCode === 27
+    return _.isFunction(this._onEsc)
+      && isEscapeKey(evt.key)
       && this._onEsc();
   }
 
