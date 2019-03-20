@@ -35,7 +35,8 @@ export default class FullPoint {
 
   _onSaveButtonClick(evt) {
     evt.preventDefault();
-    return (typeof this._onSave === `function`) && this._onSave();
+    return typeof this._onSave === `function`
+      && this._onSave();
   }
 
   set onSave(fn) {
@@ -43,7 +44,8 @@ export default class FullPoint {
   }
 
   _onDeleteButtonClick() {
-    return (typeof this._onDelete === `function`) && this._onDelete();
+    return typeof this._onDelete === `function`
+      && this._onDelete();
   }
 
   set onDelete(fn) {
@@ -51,7 +53,9 @@ export default class FullPoint {
   }
 
   _onKeyEsc(evt) {
-    return (typeof this._onEsc === `function`) && (evt.keyCode === 27) && this._onEsc();
+    return typeof this._onEsc === `function`
+      && evt.keyCode === 27
+      && this._onEsc();
   }
 
   set onEsc(fn) {
@@ -74,7 +78,6 @@ export default class FullPoint {
     return `${this._pictures.map((picture)=>`
       <img src="http:${picture}" alt="picture from place" class="point__destination-image">`).join(``)}`;
   }
-
 
   get template() {
     return `<article class="point">
@@ -174,7 +177,6 @@ export default class FullPoint {
     this._element = createElement(this.template);
     this.bind();
     return this._element;
-
   }
 
   unrender() {
