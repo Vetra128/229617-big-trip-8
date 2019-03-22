@@ -1,5 +1,7 @@
-import {getPoint} from './point';
+import Point from './point';
+import FullPoint from './full-point';
 import {getFilter} from './filter';
+import {getRandomInteger} from './mock/randomizes';
 
 import {getPointData} from './mock/data';
 
@@ -10,21 +12,53 @@ const filterNames = [
 ];
 
 const generateFilters = () => filterNames.map(getFilter).join(``);
-const generatePoints = (num = 3) => [...Array(num)]
-  .map(getPointData)
-  .map(getPoint)
-  .join(``);
 
 const filterForm = document.querySelector(`.trip-filter`);
 const dayItems = document.querySelector(`.trip-day__items`);
 
-const renderElements = (container, element) => {
-  container.innerHTML = element;
+const renderPointElements = (container, num = 3) => {
+  let isFullPointOpen = false;
+  container.innerHTML = ``;
+  while (num > 0) {
+    num -= 1;
+    let point = new Point(getPointData());
+    let fullPoint = new FullPoint(getPointData());
+    container.appendChild(point.render());
+    point.onClick = () => {
+      if (!isFullPointOpen) {
+        fullPoint.render();
+        container.replaceChild(fullPoint.element, point.element);
+        point.unrender();
+        isFullPointOpen = true;
+      }
+    };
+    fullPoint.onSave = () => {
+      point.render();
+      container.replaceChild(point.element, fullPoint.element);
+      fullPoint.unrender();
+      isFullPointOpen = false;
+    };
+    fullPoint.onDelete = () => {
+      fullPoint.unrender();
+      isFullPointOpen = false;
+    };
+    fullPoint.onEsc = () => {
+      point.render();
+      container.replaceChild(point.element, fullPoint.element);
+      fullPoint.unrender();
+      isFullPointOpen = false;
+    };
+  }
 };
 
 filterForm.addEventListener(`change`, () => {
-  renderElements(dayItems, generatePoints());
+  renderPointElements(dayItems, getRandomInteger());
 });
 
-renderElements(dayItems, generatePoints());
+renderPointElements(dayItems, getRandomInteger());
+const renderElements = (container, element) => {
+  container.innerHTML = element;
+};
 renderElements(filterForm, generateFilters());
+
+

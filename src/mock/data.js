@@ -2,7 +2,7 @@ import {getRandomDates, getRandomInteger} from './randomizes';
 import {
   getRandomDescription,
   getRandomOffers,
-  getRandomPicture,
+  getRandomPictures,
   getRandomTitle,
   getRandomType,
 } from './data-point';
@@ -10,7 +10,7 @@ import {
 export const getPointData = () => ({
   title: getRandomTitle(),
   type: getRandomType(),
-  picture: getRandomPicture(),
+  pictures: getRandomPictures(),
   description: getRandomDescription(3),
   price: getRandomInteger(10, 100),
   time: getRandomDates({
