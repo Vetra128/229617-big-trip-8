@@ -4,8 +4,8 @@ import {
 } from './utils';
 import {Icons} from './const';
 import {getOffers, getImages} from './point/index';
-import {makeHandler, withCapability} from "./capability";
-import Component from "./component";
+import {makeHandler, withCapability} from './capability';
+import Component from './component';
 
 const canOnEsc = makeHandler({
   target: `Btn`,
@@ -33,15 +33,6 @@ class FullPoint extends withCapability(
     this._state = {
       isEdit: false
     };
-
-    // this._element = null;
-    // this._onSave = null;
-    // this._onDelete = null;
-    // this._onEsc = null;
-    //
-    // this._onSaveButtonClick = this._onSaveButtonClick.bind(this);
-    // this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
-    // this._onKeyEsc = this._onKeyEsc.bind(this);
   }
 
   get template() {
