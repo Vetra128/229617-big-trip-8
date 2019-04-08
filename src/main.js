@@ -42,7 +42,7 @@ const renderPointElements = (container, num = 3) => {
       fullPoint.unrender();
       isFullPointOpen = false;
     };
-    fullPoint.onEsc = () => {
+    fullPoint.onEscPress = () => {
       point.render();
       container.replaceChild(point.element, fullPoint.element);
       fullPoint.unrender();

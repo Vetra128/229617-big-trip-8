@@ -1,13 +1,27 @@
 import {
   formatTime,
-  createElement,
   isEscapeKey
 } from './utils';
 import {Icons} from './const';
-import _ from 'lodash';
+import {getOffers, getImages} from './point/index';
+import {makeHandler, withCapability} from './capability';
+import Component from './component';
 
-export default class FullPoint {
+const canOnEsc = makeHandler({
+  target: `Btn`,
+  handle: `EscPress`,
+  condition: isEscapeKey,
+});
+const canOnSaveBtnClick = makeHandler({target: `FullPoint`, handle: `Save`});
+const canOnDeleteBtnClick = makeHandler({target: `FullPoint`, handle: `Delete`});
+
+class FullPoint extends withCapability(
+    canOnSaveBtnClick,
+    canOnDeleteBtnClick,
+    canOnEsc
+)(Component) {
   constructor(data) {
+    super();
     this._type = data.type;
     this._title = data.title;
     this._time = data.time;
@@ -19,65 +33,6 @@ export default class FullPoint {
     this._state = {
       isEdit: false
     };
-
-    this._element = null;
-    this._onSave = null;
-    this._onDelete = null;
-    this._onEsc = null;
-
-    this._onSaveButtonClick = this._onSaveButtonClick.bind(this);
-    this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
-    this._onKeyEsc = this._onKeyEsc.bind(this);
-  }
-
-  get element() {
-    return this._element;
-  }
-
-  _onSaveButtonClick(evt) {
-    evt.preventDefault();
-    return _.isFunction(this._onSave)
-      && this._onSave();
-  }
-
-  set onSave(fn) {
-    this._onSave = fn;
-  }
-
-  _onDeleteButtonClick() {
-    return _.isFunction(this._onDelete)
-      && this._onDelete();
-  }
-
-  set onDelete(fn) {
-    this._onDelete = fn;
-  }
-
-  _onKeyEsc(evt) {
-    return _.isFunction(this._onEsc)
-      && isEscapeKey(evt)
-      && this._onEsc();
-  }
-
-  set onEsc(fn) {
-    this._onEsc = fn;
-  }
-
-  _getOffers() {
-    return `
-  <ul class="trip-point__offers">
-  ${this._offers.map(({name, price}) => `
-    <li>
-      <button class="trip-point__offer">${name} +&euro;&nbsp;${price}
-      </button>
-    </li>`
-  ).join(``)}
-  </ul>`;
-  }
-
-  _getImg() {
-    return `${this._pictures.map((picture)=>`
-      <img src="http:${picture}" alt="picture from place" class="point__destination-image">`).join(``)}`;
   }
 
   get template() {
@@ -142,47 +97,37 @@ export default class FullPoint {
                     <section class="point__offers">
                       <h3 class="point__details-title">offers</h3>
                       <div class="point__offers-wrap">
-                        ${this._getOffers()}
-                      </div>
-                    </section>
-                    <section class="point__destination">
-                      <h3 class="point__details-title">Destination</h3>
-                      <p class="point__destination-text">${this._description}</p>
+                        ${this._offers.length > 0 ? getOffers(this._offers) : ``}
+                      </div>                      
+                      </section>
+                      <section class="point__destination">
+                        <h3 class="point__details-title">Destination</h3>
+                        <p class="point__destination-text">${this._description}</p>
                       <div class="point__destination-images">
-                        ${this._getImg()}
-                      </div>
+                        ${this._pictures.length > 0 ? getImages(this._pictures) : ``}
+                        </div>
+                      </section>
+                      <input type="hidden" class="point__total-price" name="total-price" value="">
                     </section>
-                    <input type="hidden" class="point__total-price" name="total-price" value="">
-                  </section>
-                </form>
-              </article>`.trim();
+                  </form>
+                </article>`.trim();
   }
 
-  bind() {
-    this._element.querySelector(`.point__button-save`)
-      .addEventListener(`click`, this._onSaveButtonClick);
-    this._element.querySelector(`.point__button-delete`)
-      .addEventListener(`click`, this._onDeleteButtonClick);
-    document.addEventListener(`keydown`, this._onKeyEsc);
+  _bind() {
+    this.element.querySelector(`.point__button-save`)
+      .addEventListener(`click`, this._onFullPointSave);
+    this.element.querySelector(`.point__button-delete`)
+      .addEventListener(`click`, this._onFullPointDelete);
+    document.addEventListener(`keydown`, this._onBtnEscPress);
   }
 
-  unbind() {
-    this._element.querySelector(`.point__button-save`)
-      .removeEventListener(`click`, this._onSaveButtonClick);
-    this._element.querySelector(`.point__button-delete`)
-      .removeEventListener(`click`, this._onDeleteButtonClick);
-    document.removeEventListener(`keydown`, this._onKeyEsc);
-  }
-
-  render() {
-    this._element = createElement(this.template);
-    this.bind();
-    return this._element;
-  }
-
-  unrender() {
-    this.unbind();
-    this._element.remove();
-    this._element = null;
+  _unbind() {
+    this.element.querySelector(`.point__button-save`)
+      .removeEventListener(`click`, this._onSaveBtnClick);
+    this.element.querySelector(`.point__button-delete`)
+      .removeEventListener(`click`, this._onDeleteBtnClick);
+    document.removeEventListener(`keydown`, this._onBtnEscPress);
   }
 }
+
+export default FullPoint;
